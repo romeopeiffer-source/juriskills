@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  CLIENT
+  ADMIN
+}
+
+enum ProductCategory {
+  PROMPT
+  SKILL
+  AGENT
+}
+
+enum PurchaseStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum ProductResultType {
+  IMAGE
+  TEXT
+}
+
+model User {
+  id               String     @id @default(cuid())
+  email            String     @unique
+  passwordHash     String
+  name             String
+  newsletterOptIn  Boolean    @default(false)
+  role             Role       @default(CLIENT)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  purchases        Purchase[]
+  reviews          Review[]
+}
+
+model Product {
+  id               String           @id @default(cuid())
+  category         ProductCategory
+  name             String
+  slug             String           @unique
+  description      String
+  shortDescription String
+  imageUrl         String?
+  price            Int
+  fileUrl          String?
+  contents         String[]         @default([])
+  discountPercent  Int?
+  discountAmount   Int?
+  discountStart    DateTime?
+  discountEnd      DateTime?
+  isPublished      Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  purchases        Purchase[]
+  reviews          Review[]
+  results          ProductResult[]
+
+  @@index([category])
+}
+
+model ProductResult {
+  id          String            @id @default(cuid())
+  productId   String
+  type        ProductResultType
+  imageUrl    String?
+  textContent String?
+  caption     String?
+  order       Int               @default(0)
+  createdAt   DateTime          @default(now())
+
+  product     Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model Purchase {
+  id               String         @id @default(cuid())
+  userId           String
+  productId        String
+  pricePaid        Int
+  invoiceUrl       String?
+  stripePaymentId  String?        @unique
+  stripeSessionId  String?        @unique
+  status           PurchaseStatus @default(PENDING)
+  createdAt        DateTime       @default(now())
+
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product          Product        @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@index([productId])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  userId     String
+  productId  String
+  rating     Int
+  comment    String
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([productId])
+}
+
+model LoginAttempt {
+  id         String   @id @default(cuid())
+  identifier String
+  createdAt  DateTime @default(now())
+
+  @@index([identifier, createdAt])
+}
+
+model WaitlistSignup {
+  id         String   @id @default(cuid())
+  email      String
+  category   String
+  createdAt  DateTime @default(now())
+
+  @@unique([email, category])
+  @@index([category])
+}

@@ -1,0 +1,88 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { z } from "zod";
+import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
+import { getEffectivePrice } from "@/lib/pricing";
+
+const checkoutSchema = z.object({ productId: z.string().min(1) });
+
+export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user || session.user.role !== "CLIENT") {
+    return NextResponse.json({ error: "Vous devez être connecté pour acheter." }, { status: 401 });
+  }
+
+  const body = await req.json();
+  const parsed = checkoutSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Produit invalide." }, { status: 400 });
+  }
+
+  const product = await prisma.product.findUnique({ where: { id: parsed.data.productId } });
+  if (!product || !product.isPublished) {
+    return NextResponse.json({ error: "Produit introuvable." }, { status: 404 });
+  }
+
+  const alreadyOwned = await prisma.purchase.findFirst({
+    where: { userId: session.user.id, productId: product.id, status: "PAID" },
+  });
+  if (alreadyOwned) {
+    return NextResponse.json({ error: "Vous possédez déjà ce produit." }, { status: 409 });
+  }
+
+  const { finalPrice } = getEffectivePrice(product);
+  const siteUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+
+  let checkoutSession;
+  try {
+    checkoutSession = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      customer_email: session.user.email ?? undefined,
+      line_items: [
+        {
+          price_data: {
+            currency: "eur",
+            unit_amount: finalPrice,
+            product_data: {
+              name: product.name,
+              description: product.shortDescription,
+            },
+          },
+          quantity: 1,
+        },
+      ],
+      metadata: {
+        userId: session.user.id,
+        productId: product.id,
+        pricePaid: String(finalPrice),
+      },
+      success_url: `${siteUrl}/compte/mes-achats?success=1`,
+      cancel_url: `${siteUrl}/produits/${product.slug}?canceled=1`,
+    });
+  } catch (err) {
+    console.error("Erreur Stripe lors de la création de la session de paiement :", err);
+    return NextResponse.json(
+      { error: "Le paiement est momentanément indisponible. Merci de réessayer dans quelques instants." },
+      { status: 502 }
+    );
+  }
+
+  if (!checkoutSession.url) {
+    return NextResponse.json({ error: "Impossible de créer la session de paiement." }, { status: 500 });
+  }
+
+  await prisma.purchase.create({
+    data: {
+      userId: session.user.id,
+      productId: product.id,
+      pricePaid: finalPrice,
+      stripeSessionId: checkoutSession.id,
+      status: "PENDING",
+    },
+  });
+
+  return NextResponse.json({ url: checkoutSession.url });
+}
