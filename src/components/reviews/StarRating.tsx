@@ -27,7 +27,7 @@ export function StarRating({
         >
           <Star
             size={size}
-            className={star <= Math.round(value) ? "fill-discount text-discount" : "fill-transparent text-slate-600"}
+            className={star <= Math.round(value) ? "fill-trust text-trust" : "fill-transparent text-slate-600"}
           />
         </button>
       ))}

@@ -93,7 +93,7 @@ export function ReviewsSection({ productId, reviews }: { productId: string; revi
           <p className="text-sm text-slate-500">Aucun avis pour l&apos;instant. Soyez le premier à donner votre avis.</p>
         ) : (
           list.map((review) => (
-            <div key={review.id} className="glass-card p-5">
+            <div key={review.id} className="glass-card border-trust/[0.22] p-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="font-medium text-white">{review.userName}</span>

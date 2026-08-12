@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-bg-primary: #0b1220; /* Encre Marine */
+  --color-bg-secondary: #131b2e; /* Nuit Longue */
+  --color-accent-tech: #7c3aed; /* Violet Argumenté */
+  --color-accent-tech-soft: #a78bfa;
+  --color-accent-trust: #b8935a; /* Laiton Vieilli */
+  --color-text-primary: #f0ebdd; /* Ivoire Papier */
+  --color-text-muted: #93a0b8; /* Gris Codifié */
+  --color-promo: #facc15;
+
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: "Segoe UI", Calibri, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Courier New", ui-monospace, monospace;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -9,8 +24,8 @@
 
   body {
     @apply bg-night-900 text-slate-100 antialiased;
-    background: radial-gradient(circle at 20% -10%, rgba(77, 70, 150, 0.07), transparent 45%),
-      linear-gradient(180deg, #05070d 0%, #0b0f1a 60%, #0b0f1a 100%);
+    background: radial-gradient(circle at 20% -10%, rgba(124, 58, 237, 0.08), transparent 45%),
+      linear-gradient(180deg, #070b14 0%, #0b1220 60%, #0b1220 100%);
     background-attachment: fixed;
   }
 }

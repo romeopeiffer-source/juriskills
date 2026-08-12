@@ -37,7 +37,7 @@ export function ProductCard({ product }: { product: ProductWithRating }) {
 
         {product.reviewCount > 0 && (
           <div className="flex items-center gap-1.5 text-sm text-slate-300">
-            <Star className="h-4 w-4 fill-discount text-discount" />
+            <Star className="h-4 w-4 fill-trust text-trust" />
             <span className="font-medium">{product.avgRating.toFixed(1)}</span>
             <span className="text-slate-500">({product.reviewCount})</span>
           </div>

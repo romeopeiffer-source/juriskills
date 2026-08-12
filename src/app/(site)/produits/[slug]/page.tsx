@@ -41,7 +41,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
 
           {product.reviewCount > 0 && (
             <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
-              <Star className="h-4 w-4 fill-discount text-discount" />
+              <Star className="h-4 w-4 fill-trust text-trust" />
               <span className="font-medium">{product.avgRating.toFixed(1)}</span>
               <span className="text-slate-500">({product.reviewCount} avis)</span>
             </div>

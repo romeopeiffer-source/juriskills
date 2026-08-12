@@ -45,8 +45,8 @@ export function ProductResultsSection({ results }: { results: ProductResult[] })
                 )}
               </button>
             ) : (
-              <div key={result.id} className="glass-card flex flex-col gap-2 border-electric-500/20 bg-white/[0.03] p-4">
-                <span className="w-fit rounded-full bg-discount/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-discount">
+              <div key={result.id} className="glass-card flex flex-col gap-2 border-trust/[0.22] bg-white/[0.03] p-4">
+                <span className="w-fit rounded-[3px] bg-trust/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-trust">
                   Exemple de résultat
                 </span>
                 <p className="whitespace-pre-line font-mono text-xs leading-relaxed text-slate-300">
