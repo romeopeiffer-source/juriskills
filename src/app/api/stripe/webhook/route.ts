@@ -38,12 +38,25 @@ async function handleCheckoutCompleted(checkoutSession: Stripe.Checkout.Session)
     include: { user: true, product: true },
   });
 
-  if (!purchase || purchase.status === "PAID") return; // idempotent
+  if (!purchase) return;
 
   const paymentIntentId =
     typeof checkoutSession.payment_intent === "string"
       ? checkoutSession.payment_intent
       : checkoutSession.payment_intent?.id ?? checkoutSession.id;
+
+  // Mark the purchase PAID immediately — this fact must not be blocked by invoice
+  // generation, storage uploads, or email delivery failing below. It also makes this
+  // step idempotent: a Stripe retry won't redo it once it has succeeded once.
+  if (purchase.status !== "PAID") {
+    await prisma.purchase.update({
+      where: { id: purchase.id },
+      data: { status: "PAID", stripePaymentId: paymentIntentId },
+    });
+  }
+
+  // Invoice + email already handled on a previous delivery attempt.
+  if (purchase.invoiceUrl) return;
 
   const invoiceNumber = `JRK-${purchase.createdAt.getFullYear()}-${purchase.id.slice(-8).toUpperCase()}`;
 
@@ -61,11 +74,7 @@ async function handleCheckoutCompleted(checkoutSession: Stripe.Checkout.Session)
 
   await prisma.purchase.update({
     where: { id: purchase.id },
-    data: {
-      status: "PAID",
-      stripePaymentId: paymentIntentId,
-      invoiceUrl: invoicePath,
-    },
+    data: { invoiceUrl: invoicePath },
   });
 
   const siteUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
