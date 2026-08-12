@@ -33,7 +33,15 @@ export async function POST(req: Request) {
   }
 
   const { finalPrice } = getEffectivePrice(product);
-  const siteUrl = process.env.NEXTAUTH_URL ?? "http://localhost:3000";
+  // Use the domain the customer is actually browsing on (not a fixed env var) so the
+  // Stripe redirect lands back on the same origin as their session cookie — otherwise
+  // the app has multiple valid domains (e.g. a custom domain + the *.vercel.app one),
+  // the customer appears logged out after paying.
+  const siteUrl =
+    req.headers.get("origin") ??
+    (req.headers.get("host") ? `https://${req.headers.get("host")}` : null) ??
+    process.env.NEXTAUTH_URL ??
+    "http://localhost:3000";
 
   let checkoutSession;
   try {
@@ -59,7 +67,7 @@ export async function POST(req: Request) {
         productId: product.id,
         pricePaid: String(finalPrice),
       },
-      success_url: `${siteUrl}/compte/mes-achats?success=1`,
+      success_url: `${siteUrl}/achat-confirme`,
       cancel_url: `${siteUrl}/produits/${product.slug}?canceled=1`,
     });
   } catch (err) {
