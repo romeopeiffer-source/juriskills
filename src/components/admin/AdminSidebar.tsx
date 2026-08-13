@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { LayoutDashboard, Package, Tag, Receipt, MessageSquare, Users, Clock, LogOut, Scale } from "lucide-react";
+import { LayoutDashboard, Package, Tag, Receipt, MessageSquare, Users, Clock, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogoIcon } from "@/components/layout/LogoIcon";
 
 const LINKS = [
   { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard, exact: true },
@@ -22,10 +23,9 @@ export function AdminSidebar() {
   return (
     <aside className="flex shrink-0 flex-col gap-1 border-b border-white/10 bg-night-950/60 px-4 py-6 md:w-64 md:border-b-0 md:border-r md:px-4">
       <div className="mb-6 flex items-center gap-2 px-2 font-display text-lg font-semibold text-white">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-electric-gradient">
-          <Scale className="h-4 w-4 text-white" />
-        </span>
-        Juriskills <span className="text-xs font-normal text-slate-500">admin</span>
+        <LogoIcon className="h-8 w-8 rounded-lg" />
+        Juri<span className="text-electric-400">skills</span>{" "}
+        <span className="text-xs font-normal text-slate-500">admin</span>
       </div>
 
       {LINKS.map((link) => {

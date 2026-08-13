@@ -4,8 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useState } from "react";
-import { Scale, Menu, X, User, LogOut, ShoppingBag } from "lucide-react";
+import { Menu, X, User, LogOut, ShoppingBag } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LogoIcon } from "./LogoIcon";
 
 const TABS = [
   { href: "/prompts", label: "Prompts IA" },
@@ -22,10 +23,8 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-night-950/80 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold tracking-tight">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-electric-gradient shadow-glow">
-            <Scale className="h-5 w-5 text-white" />
-          </span>
-          Juriskills
+          <LogoIcon className="h-9 w-9 shadow-glow rounded-lg" />
+          Juri<span className="text-electric-400">skills</span>
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
