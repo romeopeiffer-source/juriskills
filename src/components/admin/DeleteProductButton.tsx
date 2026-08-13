@@ -14,6 +14,14 @@ export function DeleteProductButton({ productId }: { productId: string }) {
     try {
       const res = await fetch(`/api/admin/products/${productId}`, { method: "DELETE" });
       if (!res.ok) throw new Error();
+      const data = await res.json();
+      if (data.unpublishedOnly) {
+        alert(
+          "Ce produit a déjà été acheté par au moins un client : il ne peut pas être supprimé définitivement " +
+            "(cela casserait l'historique d'achat et les factures de ces clients). Il a donc été masqué du " +
+            "catalogue à la place — il reste visible ici avec le statut « Masqué »."
+        );
+      }
       router.refresh();
     } catch {
       alert("Impossible de supprimer ce produit.");
