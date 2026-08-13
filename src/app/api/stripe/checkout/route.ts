@@ -25,13 +25,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Produit introuvable." }, { status: 404 });
   }
 
-  const alreadyOwned = await prisma.purchase.findFirst({
-    where: { userId: session.user.id, productId: product.id, status: "PAID" },
-  });
-  if (alreadyOwned) {
-    return NextResponse.json({ error: "Vous possédez déjà ce produit." }, { status: 409 });
-  }
-
   const { finalPrice } = getEffectivePrice(product);
   // Use the domain the customer is actually browsing on (not a fixed env var) so the
   // Stripe redirect lands back on the same origin as their session cookie — otherwise
