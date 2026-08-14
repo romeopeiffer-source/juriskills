@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { requireAdminSession } from "@/lib/admin-auth";
-import { parseContentsList } from "@/lib/utils";
 import {
   BUCKET_PRODUCT_FILES,
   BUCKET_PRODUCT_IMAGES,
+  BUCKET_PRODUCT_VIDEOS,
   uploadPrivateFile,
   uploadPublicFile,
 } from "@/lib/supabase-storage";
@@ -19,7 +19,6 @@ const productSchema = z.object({
     .min(2)
     .max(150)
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Le slug doit être en minuscules, chiffres et tirets."),
-  shortDescription: z.string().trim().min(2).max(200),
   description: z.string().trim().min(2).max(5000),
   price: z.coerce.number().int().min(0),
   discountPercent: z.coerce.number().int().min(0).max(100).optional().nullable(),
@@ -78,15 +77,25 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     fileUrl = filePath;
   }
 
+  let videoUrl = product.videoUrl;
+  const video = formData.get("video");
+  if (video instanceof File && video.size > 0) {
+    const videoPath = `${product.id}/${Date.now()}-${video.name}`;
+    videoUrl = await uploadPublicFile(
+      BUCKET_PRODUCT_VIDEOS,
+      videoPath,
+      Buffer.from(await video.arrayBuffer()),
+      video.type
+    );
+  }
+
   await prisma.product.update({
     where: { id: product.id },
     data: {
       category: data.category,
       name: data.name,
       slug: data.slug,
-      shortDescription: data.shortDescription,
       description: data.description,
-      contents: parseContentsList(formData.get("contents")),
       price: data.price,
       discountPercent: data.discountPercent || null,
       discountAmount: data.discountAmount || null,
@@ -95,6 +104,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
       isPublished: data.isPublished ?? true,
       imageUrl,
       fileUrl,
+      videoUrl,
     },
   });
 

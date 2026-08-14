@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FileText, ListChecks, Star } from "lucide-react";
+import { FileText, Star } from "lucide-react";
 import { PriceTag } from "@/components/products/PriceTag";
 import type { ProductWithRating } from "@/types/product";
 
@@ -23,17 +23,9 @@ export function ProductCard({ product }: { product: ProductWithRating }) {
       </div>
 
       <div className="flex flex-1 flex-col gap-2 p-5">
-        <h3 className="font-display text-base font-semibold text-white group-hover:text-electric-400">
+        <h3 className="flex-1 font-display text-base font-semibold text-white group-hover:text-electric-400">
           {product.name}
         </h3>
-        <p className="line-clamp-2 flex-1 text-sm text-slate-400">{product.shortDescription}</p>
-
-        {product.contents.length > 0 && (
-          <div className="flex items-center gap-1.5 text-xs text-slate-500">
-            <ListChecks className="h-3.5 w-3.5" />
-            {product.contents.length} élément{product.contents.length > 1 ? "s" : ""} inclus
-          </div>
-        )}
 
         {product.reviewCount > 0 && (
           <div className="flex items-center gap-1.5 text-sm text-slate-300">

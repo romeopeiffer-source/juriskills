@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { CheckCircle2, FileText, Sparkles, Star } from "lucide-react";
+import { FileText, Sparkles, Star } from "lucide-react";
 import { getProductBySlug } from "@/lib/products";
 import { PriceTag } from "@/components/products/PriceTag";
 import { BuyButton } from "@/components/products/BuyButton";
@@ -71,19 +71,13 @@ export default async function ProductPage({ params }: { params: { slug: string }
         </div>
       </div>
 
-      {product.contents.length > 0 && (
+      {product.videoUrl && (
         <div className="mt-16">
-          <h2 className="font-display text-xl font-bold text-white">Contenu du pack</h2>
-          <p className="mt-1 text-sm text-slate-500">
-            {product.contents.length} élément{product.contents.length > 1 ? "s" : ""} inclus dans cet achat.
-          </p>
-          <div className="glass-card mt-5 grid grid-cols-1 gap-x-8 gap-y-3 p-6 sm:grid-cols-2">
-            {product.contents.map((item, index) => (
-              <div key={index} className="flex items-start gap-2.5 text-sm text-slate-300">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-electric-400" />
-                <span>{item}</span>
-              </div>
-            ))}
+          <h2 className="font-display text-xl font-bold text-white">Démonstration</h2>
+          <p className="mt-1 text-sm text-slate-500">Voyez le produit en conditions réelles avant de l&apos;acheter.</p>
+          <div className="glass-card mt-5 overflow-hidden p-2">
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+            <video src={product.videoUrl} controls className="aspect-video w-full rounded-lg bg-night-950" />
           </div>
         </div>
       )}

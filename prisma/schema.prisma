@@ -51,11 +51,10 @@ model Product {
   name             String
   slug             String           @unique
   description      String
-  shortDescription String
   imageUrl         String?
+  videoUrl         String?
   price            Int
   fileUrl          String?
-  contents         String[]         @default([])
   discountPercent  Int?
   discountAmount   Int?
   discountStart    DateTime?

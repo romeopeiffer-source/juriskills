@@ -49,7 +49,7 @@ export async function POST(req: Request) {
             unit_amount: finalPrice,
             product_data: {
               name: product.name,
-              description: product.shortDescription,
+              description: product.description.slice(0, 300),
             },
           },
           quantity: 1,

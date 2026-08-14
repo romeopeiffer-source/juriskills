@@ -61,17 +61,6 @@ export function ProductForm({ product }: { product?: Product }) {
       </div>
 
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-300">Description courte</label>
-        <input
-          name="shortDescription"
-          defaultValue={product?.shortDescription}
-          maxLength={200}
-          required
-          className="input-field"
-        />
-      </div>
-
-      <div>
         <label className="mb-1.5 block text-sm font-medium text-slate-300">Description complète</label>
         <textarea
           name="description"
@@ -80,23 +69,6 @@ export function ProductForm({ product }: { product?: Product }) {
           required
           className="input-field resize-none"
         />
-      </div>
-
-      <div>
-        <label className="mb-1.5 block text-sm font-medium text-slate-300">
-          Contenu du pack <span className="font-normal text-slate-500">(optionnel)</span>
-        </label>
-        <textarea
-          name="contents"
-          defaultValue={product?.contents?.join("\n")}
-          rows={5}
-          placeholder={"Un élément par ligne, ex :\nPrompt de rédaction de mise en demeure\nPrompt d'analyse de contrat\nPrompt de recherche de jurisprudence"}
-          className="input-field resize-none"
-        />
-        <p className="mt-1 text-xs text-slate-500">
-          Un élément par ligne. Affiché sur la page produit pour lister ce que contient le pack (ex : titres des
-          prompts inclus).
-        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -185,6 +157,19 @@ export function ProductForm({ product }: { product?: Product }) {
           <input type="file" name="file" className="input-field" />
           {product?.fileUrl && <p className="mt-1 text-xs text-slate-500">Un fichier existe déjà — remplacez-le si besoin.</p>}
         </div>
+      </div>
+
+      <div>
+        <label className="mb-1.5 block text-sm font-medium text-slate-300">
+          Vidéo de démonstration <span className="font-normal text-slate-500">(optionnel)</span>
+        </label>
+        <input type="file" name="video" accept="video/*" className="input-field" />
+        {product?.videoUrl && (
+          <p className="mt-1 text-xs text-slate-500">Une vidéo existe déjà — remplacez-la si besoin.</p>
+        )}
+        <p className="mt-1 text-xs text-slate-500">
+          Affichée sur la page produit pour montrer le produit en conditions réelles avant achat.
+        </p>
       </div>
 
       {error && <p className="text-sm text-red-400">{error}</p>}

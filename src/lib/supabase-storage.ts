@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
 export const BUCKET_PRODUCT_IMAGES = "product-images";
+export const BUCKET_PRODUCT_VIDEOS = "product-videos";
 export const BUCKET_PRODUCT_FILES = "product-files";
 export const BUCKET_INVOICES = "invoices";
 
