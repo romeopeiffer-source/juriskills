@@ -68,15 +68,22 @@ export default function RegisterPage() {
             required
             className="input-field"
           />
-          <input
-            type="password"
-            placeholder="Mot de passe (8 caractères min.)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            minLength={8}
-            className="input-field"
-          />
+          <div>
+            <input
+              type="password"
+              placeholder="Mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={8}
+              pattern="(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}"
+              title="8 caractères minimum, avec au moins une majuscule, un chiffre et un caractère spécial."
+              className="input-field"
+            />
+            <p className="mt-1.5 text-xs text-slate-500">
+              8 caractères minimum, avec au moins une majuscule, un chiffre et un caractère spécial.
+            </p>
+          </div>
 
           <label className="flex items-start gap-3 text-sm text-slate-400">
             <input

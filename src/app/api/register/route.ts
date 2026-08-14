@@ -6,7 +6,13 @@ import { prisma } from "@/lib/prisma";
 const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
   email: z.string().trim().email(),
-  password: z.string().min(8).max(100),
+  password: z
+    .string()
+    .min(8, "Le mot de passe doit contenir au moins 8 caractères.")
+    .max(100)
+    .regex(/[A-Z]/, "Le mot de passe doit contenir au moins une majuscule.")
+    .regex(/[0-9]/, "Le mot de passe doit contenir au moins un chiffre.")
+    .regex(/[^A-Za-z0-9]/, "Le mot de passe doit contenir au moins un caractère spécial."),
   newsletterOptIn: z.boolean().default(false),
 });
 
@@ -14,7 +20,8 @@ export async function POST(req: Request) {
   const body = await req.json();
   const parsed = registerSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Merci de vérifier les informations saisies." }, { status: 400 });
+    const message = parsed.error.issues[0]?.message ?? "Merci de vérifier les informations saisies.";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 
   const { name, email, password, newsletterOptIn } = parsed.data;

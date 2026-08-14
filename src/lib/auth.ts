@@ -23,6 +23,12 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        const identifier = `client-login:${credentials.email.toLowerCase()}`;
+        if (await isRateLimited(identifier)) {
+          throw new Error("Trop de tentatives. Réessayez dans quelques minutes.");
+        }
+        await recordAttempt(identifier);
+
         const user = await prisma.user.findUnique({
           where: { email: credentials.email.toLowerCase() },
         });
