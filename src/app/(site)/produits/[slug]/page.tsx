@@ -5,7 +5,6 @@ import { getProductBySlug } from "@/lib/products";
 import { PriceTag } from "@/components/products/PriceTag";
 import { BuyButton } from "@/components/products/BuyButton";
 import { ReviewsSection } from "@/components/reviews/ReviewsSection";
-import { ProductResultsSection } from "@/components/products/ProductResultsSection";
 import { CATEGORY_LABELS } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -34,22 +33,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
         </div>
 
         <div className="flex flex-col">
-          <span className="text-xs font-semibold uppercase tracking-wider text-electric-400">
-            {CATEGORY_LABELS[product.category]}
-          </span>
-          <h1 className="mt-2 font-display text-3xl font-bold text-white">{product.name}</h1>
-
-          {product.reviewCount > 0 && (
-            <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
-              <Star className="h-4 w-4 fill-trust text-trust" />
-              <span className="font-medium">{product.avgRating.toFixed(1)}</span>
-              <span className="text-slate-500">({product.reviewCount} avis)</span>
-            </div>
-          )}
-
-          <p className="mt-5 whitespace-pre-line text-slate-400">{product.description}</p>
-
-          <div className="mt-8">
+          <div className="mt-2">
             <PriceTag
               size="lg"
               price={product.price}
@@ -71,6 +55,23 @@ export default async function ProductPage({ params }: { params: { slug: string }
         </div>
       </div>
 
+      <div className="mt-10">
+        <span className="text-xs font-semibold uppercase tracking-wider text-electric-400">
+          {CATEGORY_LABELS[product.category]}
+        </span>
+        <h1 className="mt-2 font-display text-3xl font-bold text-white">{product.name}</h1>
+
+        {product.reviewCount > 0 && (
+          <div className="mt-3 flex items-center gap-2 text-sm text-slate-300">
+            <Star className="h-4 w-4 fill-trust text-trust" />
+            <span className="font-medium">{product.avgRating.toFixed(1)}</span>
+            <span className="text-slate-500">({product.reviewCount} avis)</span>
+          </div>
+        )}
+
+        <p className="mt-5 whitespace-pre-line text-slate-400">{product.description}</p>
+      </div>
+
       {product.videoUrl && (
         <div className="mt-16">
           <h2 className="font-display text-xl font-bold text-white">Démonstration</h2>
@@ -81,8 +82,6 @@ export default async function ProductPage({ params }: { params: { slug: string }
           </div>
         </div>
       )}
-
-      <ProductResultsSection results={product.results} />
 
       <div className="mt-20">
         <ReviewsSection
