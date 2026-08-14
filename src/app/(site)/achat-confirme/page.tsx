@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CheckCircle2, Mail, Receipt } from "lucide-react";
+import { CheckCircle2, Mail, Receipt, Star } from "lucide-react";
 
 export const metadata = { title: "Achat confirmé — Juriskills" };
 
@@ -29,6 +29,13 @@ export default function AchatConfirmePage() {
           <Receipt className="mt-0.5 h-5 w-5 shrink-0 text-electric-400" />
           <p className="text-sm text-slate-300">
             Votre achat et votre facture restent aussi accessibles à tout moment depuis votre espace "Mes achats".
+          </p>
+        </div>
+        <div className="flex items-start gap-3">
+          <Star className="mt-0.5 h-5 w-5 shrink-0 text-electric-400" />
+          <p className="text-sm text-slate-300">
+            Une fois que vous l&apos;avez testé, pensez à laisser un avis sur le produit : ça aide les autres
+            étudiants à choisir en confiance.
           </p>
         </div>
       </div>

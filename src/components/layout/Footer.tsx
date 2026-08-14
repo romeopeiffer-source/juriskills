@@ -12,8 +12,8 @@ export function Footer() {
               Juri<span className="text-electric-400">skills</span>
             </div>
             <p className="mt-3 text-sm text-slate-400">
-              Une marketplace d&apos;étudiants, pour des étudiants et professionnels du droit : des outils IA testés
-              par nos soins, à prix étudiant.
+              Une marketplace d&apos;étudiants, pour des étudiants en droit : des outils IA testés par nos soins, à
+              prix étudiant.
             </p>
             <Link
               href="/a-propos"

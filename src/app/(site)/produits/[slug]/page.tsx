@@ -83,7 +83,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
         </div>
       )}
 
-      <div className="mt-20">
+      <div id="avis" className="mt-20">
         <ReviewsSection
           productId={product.id}
           reviews={product.reviews.map((r) => ({
