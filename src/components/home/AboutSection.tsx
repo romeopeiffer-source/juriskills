@@ -1,4 +1,4 @@
-import { BadgeCheck, GraduationCap, ShieldCheck, Tag } from "lucide-react";
+import { BadgeCheck, Gavel, GraduationCap, LifeBuoy, ShieldCheck, Tag } from "lucide-react";
 import { TrustStat } from "@/components/home/TrustStat";
 import { TestedByAIBadge } from "@/components/ui/TestedByAIBadge";
 import { StudentCountBadge } from "@/components/ui/StudentCountBadge";
@@ -52,7 +52,7 @@ export async function AboutSection({ compact = false }: { compact?: boolean }) {
           </div>
 
           {!compact && (
-            <div className="mt-10 grid grid-cols-1 gap-8 border-t border-white/10 pt-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-10 grid grid-cols-1 gap-8 border-t border-white/10 pt-8 sm:grid-cols-2 lg:grid-cols-3">
               <TrustStat
                 icon={<GraduationCap className="h-5 w-5" />}
                 label="Fait par des étudiants, pour des étudiants"
@@ -61,6 +61,16 @@ export async function AboutSection({ compact = false }: { compact?: boolean }) {
               <TrustStat icon={<ShieldCheck className="h-5 w-5" />} label="Paiement 100% sécurisé" value="Stripe Checkout" />
               <TrustStat icon={<BadgeCheck className="h-5 w-5" />} label="Prompts testés & approuvés" value="Qualité garantie" />
               <TrustStat icon={<Tag className="h-5 w-5" />} label="Qualité testée, prix étudiant" value="Pensé pour votre budget" />
+              <TrustStat
+                icon={<LifeBuoy className="h-5 w-5" />}
+                label="On vous aide à bien démarrer"
+                value="Accompagnement à l'installation"
+              />
+              <TrustStat
+                icon={<Gavel className="h-5 w-5" />}
+                label="Fonctionne aussi avec les IA spécialisées en droit"
+                value="Compatible IA juridiques"
+              />
             </div>
           )}
         </div>
