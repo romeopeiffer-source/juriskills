@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import { CategoryHeader } from "@/components/products/CategoryHeader";
+import { CategoryDefinition } from "@/components/products/CategoryDefinition";
 import { ProductCard } from "@/components/products/ProductCard";
 import { EmptyStateWaitlist } from "@/components/products/EmptyStateWaitlist";
 
@@ -16,6 +17,12 @@ export default async function SkillsPage() {
         title="Skills IA"
         description="Des compétences packagées pour vos agents IA : recherche juridique, rédaction d'actes, veille réglementaire."
       />
+      <CategoryDefinition>
+        Une skill est un module de compétence que vous ajoutez à votre assistant IA pour qu&apos;il applique
+        automatiquement une méthode ou un format précis à chaque usage, sans avoir à réécrire vos instructions à
+        chaque fois. Contrairement à un prompt isolé, elle reste active en continu — idéale pour les tâches
+        juridiques que vous répétez souvent.
+      </CategoryDefinition>
       {products.length === 0 ? (
         <EmptyStateWaitlist category="SKILL" />
       ) : (

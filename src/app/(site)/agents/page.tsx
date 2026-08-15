@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import { CategoryHeader } from "@/components/products/CategoryHeader";
+import { CategoryDefinition } from "@/components/products/CategoryDefinition";
 import { ProductCard } from "@/components/products/ProductCard";
 import { EmptyStateWaitlist } from "@/components/products/EmptyStateWaitlist";
 
@@ -16,6 +17,11 @@ export default async function AgentsPage() {
         title="Agents IA"
         description="Des agents autonomes prêts à automatiser vos tâches juridiques répétitives, du tri de contrats à la veille jurisprudentielle."
       />
+      <CategoryDefinition>
+        Un agent est un assistant IA autonome capable d&apos;enchaîner plusieurs étapes seul — rechercher, analyser,
+        rédiger — pour accomplir une tâche complète sans intervention à chaque étape. Il va plus loin qu&apos;un
+        prompt ou qu&apos;une skill en prenant en charge tout un processus de bout en bout.
+      </CategoryDefinition>
       {products.length === 0 ? (
         <EmptyStateWaitlist category="AGENT" />
       ) : (

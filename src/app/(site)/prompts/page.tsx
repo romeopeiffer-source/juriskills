@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getProductsByCategory } from "@/lib/products";
 import { CategoryHeader } from "@/components/products/CategoryHeader";
+import { CategoryDefinition } from "@/components/products/CategoryDefinition";
 import { ProductCard } from "@/components/products/ProductCard";
 import { EmptyStateWaitlist } from "@/components/products/EmptyStateWaitlist";
 
@@ -16,6 +17,11 @@ export default async function PromptsPage() {
         title="Prompts IA"
         description="Des prompts juridiques prêts à l'emploi, testés et optimisés pour vos assistants IA préférés."
       />
+      <CategoryDefinition>
+        Un prompt est une instruction textuelle prête à l&apos;emploi : vous la copiez-collez dans ChatGPT, Claude
+        ou tout autre assistant IA, sans rien installer. C&apos;est la porte d&apos;entrée la plus simple pour
+        obtenir directement une réponse structurée sur un exercice ou une tâche juridique précise.
+      </CategoryDefinition>
       {products.length === 0 ? (
         <EmptyStateWaitlist category="PROMPT" />
       ) : (
