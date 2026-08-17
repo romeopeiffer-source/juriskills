@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { Download, FileText, Package } from "lucide-react";
+import { BookOpen, Download, FileText, Package } from "lucide-react";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/pricing";
@@ -24,6 +24,19 @@ export default async function MesAchatsPage() {
     <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
       <h1 className="font-display text-3xl font-bold text-white">Mes achats</h1>
       <p className="mt-2 text-slate-400">Retrouvez ici tous vos produits achetés et vos factures.</p>
+
+      <a
+        href="/guide-utilisation-juriskills.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="glass-card mt-6 flex items-center gap-3 p-4 text-sm text-slate-300 hover:text-white"
+      >
+        <BookOpen className="h-5 w-5 shrink-0 text-electric-400" />
+        <span>
+          <span className="font-medium text-white">Guide d&apos;utilisation Juriskills</span> — comment tirer le
+          meilleur de vos prompts et skills.
+        </span>
+      </a>
 
       {purchases.length === 0 ? (
         <div className="glass-card mt-10 flex flex-col items-center gap-3 px-8 py-16 text-center">

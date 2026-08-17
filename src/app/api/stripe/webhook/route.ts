@@ -91,6 +91,8 @@ async function handleCheckoutCompleted(checkoutSession: Stripe.Checkout.Session)
           <p>Votre facture est jointe à cet email. Vous pouvez également retrouver votre produit et votre facture
           à tout moment dans votre espace personnel :</p>
           <p><a href="${siteUrl}/compte/mes-achats" style="color:#4d4696;">Accéder à mes achats</a></p>
+          <p>Pour bien démarrer, consultez notre guide d'utilisation des prompts et skills Juriskills :</p>
+          <p><a href="${siteUrl}/guide-utilisation-juriskills.pdf" style="color:#4d4696;">Télécharger le guide d'utilisation</a></p>
           <p>Une fois que vous l'avez testé, dites-nous ce que vous en pensez : votre avis aide les autres
           étudiants à choisir en confiance.</p>
           <p><a href="${siteUrl}/produits/${purchase.product.slug}#avis" style="color:#4d4696;">Laisser un avis sur ${purchase.product.name}</a></p>
