@@ -1,4 +1,4 @@
-import { BadgeCheck, Clock, Gavel, GraduationCap, LifeBuoy, ShieldCheck, Tag } from "lucide-react";
+import { BadgeCheck, Clock, Gavel, LifeBuoy, ShieldCheck, Tag } from "lucide-react";
 import { TrustStat } from "@/components/home/TrustStat";
 import { TestedByAIBadge } from "@/components/ui/TestedByAIBadge";
 import { StudentCountBadge } from "@/components/ui/StudentCountBadge";
@@ -53,11 +53,6 @@ export async function AboutSection({ compact = false }: { compact?: boolean }) {
 
           {!compact && (
             <div className="mt-10 grid grid-cols-1 gap-8 border-t border-white/10 pt-8 sm:grid-cols-2 lg:grid-cols-3">
-              <TrustStat
-                icon={<GraduationCap className="h-5 w-5" />}
-                label="Fait par des étudiants, pour des étudiants"
-                value="Une communauté qui se comprend"
-              />
               <TrustStat icon={<ShieldCheck className="h-5 w-5" />} label="Paiement 100% sécurisé" value="Stripe Checkout" />
               <TrustStat icon={<BadgeCheck className="h-5 w-5" />} label="Prompts testés & approuvés" value="Testé dans nos laboratoires IA" />
               <TrustStat icon={<Tag className="h-5 w-5" />} label="Qualité testée, prix étudiant" value="Pensé pour votre budget" />
