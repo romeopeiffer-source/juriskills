@@ -1,4 +1,4 @@
-import { BadgeCheck, Gavel, GraduationCap, LifeBuoy, ShieldCheck, Tag } from "lucide-react";
+import { BadgeCheck, Clock, Gavel, GraduationCap, LifeBuoy, ShieldCheck, Tag } from "lucide-react";
 import { TrustStat } from "@/components/home/TrustStat";
 import { TestedByAIBadge } from "@/components/ui/TestedByAIBadge";
 import { StudentCountBadge } from "@/components/ui/StudentCountBadge";
@@ -59,7 +59,7 @@ export async function AboutSection({ compact = false }: { compact?: boolean }) {
                 value="Une communauté qui se comprend"
               />
               <TrustStat icon={<ShieldCheck className="h-5 w-5" />} label="Paiement 100% sécurisé" value="Stripe Checkout" />
-              <TrustStat icon={<BadgeCheck className="h-5 w-5" />} label="Prompts testés & approuvés" value="Qualité garantie" />
+              <TrustStat icon={<BadgeCheck className="h-5 w-5" />} label="Prompts testés & approuvés" value="Testé dans nos laboratoires IA" />
               <TrustStat icon={<Tag className="h-5 w-5" />} label="Qualité testée, prix étudiant" value="Pensé pour votre budget" />
               <TrustStat
                 icon={<LifeBuoy className="h-5 w-5" />}
@@ -70,6 +70,11 @@ export async function AboutSection({ compact = false }: { compact?: boolean }) {
                 icon={<Gavel className="h-5 w-5" />}
                 label="Fonctionne aussi avec les IA spécialisées en droit"
                 value="Compatible IA juridiques"
+              />
+              <TrustStat
+                icon={<Clock className="h-5 w-5" />}
+                label="Fini les heures perdues à chercher le bon prompt"
+                value="Un gain de temps immédiat"
               />
             </div>
           )}
