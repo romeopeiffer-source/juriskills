@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { subscribeToNewsletter, resolveSiteUrl } from "@/lib/newsletter";
 
 const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -43,6 +44,15 @@ export async function POST(req: Request) {
       role: "CLIENT",
     },
   });
+
+  if (newsletterOptIn) {
+    try {
+      await subscribeToNewsletter(normalizedEmail, resolveSiteUrl(req));
+    } catch (err) {
+      // Newsletter enrollment is a side effect of registration — a failure here shouldn't fail account creation.
+      console.error("Erreur lors de l'inscription à la newsletter pendant l'inscription :", err);
+    }
+  }
 
   return NextResponse.json({ success: true });
 }
