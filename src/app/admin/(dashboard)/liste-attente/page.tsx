@@ -4,7 +4,7 @@ import { CATEGORY_LABELS } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-const CATEGORIES = ["PROMPT", "SKILL", "AGENT"] as const;
+const CATEGORIES = ["PROMPT", "SKILL", "AGENT", "NEWSLETTER"] as const;
 
 export default async function AdminWaitlistPage() {
   const counts = await Promise.all(
@@ -18,7 +18,7 @@ export default async function AdminWaitlistPage() {
         Inscriptions laissées par des visiteurs sur les catégories encore sans produit publié.
       </p>
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {CATEGORIES.map((category, index) => (
           <div key={category} className="glass-card p-5">
             <div className="flex items-center gap-3">

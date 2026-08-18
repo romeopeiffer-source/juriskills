@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   if (!session) return NextResponse.json({ error: "Accès refusé." }, { status: 403 });
 
   const category = new URL(req.url).searchParams.get("category");
-  if (!category || !["PROMPT", "SKILL", "AGENT"].includes(category)) {
+  if (!category || !["PROMPT", "SKILL", "AGENT", "NEWSLETTER"].includes(category)) {
     return NextResponse.json({ error: "Catégorie invalide." }, { status: 400 });
   }
 

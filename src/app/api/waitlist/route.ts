@@ -6,7 +6,7 @@ import { getResend, EMAIL_FROM } from "@/lib/resend";
 
 const waitlistSchema = z.object({
   email: z.string().trim().email().max(200),
-  category: z.enum(["PROMPT", "SKILL", "AGENT"]),
+  category: z.enum(["PROMPT", "SKILL", "AGENT", "NEWSLETTER"]),
   website: z.string().max(0).optional().or(z.literal("")), // honeypot: must stay empty
 });
 
@@ -31,6 +31,15 @@ export async function POST(req: Request) {
 
   const email = parsed.data.email.toLowerCase();
 
+  const siteUrl =
+    req.headers.get("origin") ??
+    (req.headers.get("host") ? `https://${req.headers.get("host")}` : null) ??
+    process.env.NEXTAUTH_URL ??
+    "http://localhost:3000";
+
+  const isNewsletter = parsed.data.category === "NEWSLETTER";
+  const freePromptUrl = `${siteUrl}/prompt-gratuit-fiche-arret-juriskills.pdf`;
+
   try {
     await prisma.waitlistSignup.create({
       data: { email, category: parsed.data.category },
@@ -39,7 +48,7 @@ export async function POST(req: Request) {
     const isDuplicate =
       typeof err === "object" && err !== null && "code" in err && (err as { code?: string }).code === "P2002";
     if (isDuplicate) {
-      return NextResponse.json({ alreadySubscribed: true });
+      return NextResponse.json({ alreadySubscribed: true, freePromptUrl: isNewsletter ? freePromptUrl : undefined });
     }
     console.error("Erreur lors de l'inscription à la liste d'attente :", err);
     return NextResponse.json({ error: "Une erreur est survenue. Réessaie plus tard." }, { status: 500 });
@@ -49,8 +58,19 @@ export async function POST(req: Request) {
     await getResend().emails.send({
       from: EMAIL_FROM,
       to: email,
-      subject: "Tu es sur la liste d'attente Juriskills",
-      html: `
+      subject: isNewsletter ? "Ton prompt gratuit Juriskills" : "Tu es sur la liste d'attente Juriskills",
+      html: isNewsletter
+        ? `
+        <div style="font-family: sans-serif; color: #0b0f1a;">
+          <h1 style="color: #4d4696;">Bienvenue dans la newsletter Juriskills !</h1>
+          <p>Comme promis, voici ton prompt gratuit « Fiche d'arrêt guidée pour étudiant en L1 », extrait de notre
+          Pack rentrée L1 — à copier-coller directement dans ton IA préférée :</p>
+          <p><a href="${freePromptUrl}" style="color:#4d4696;">Télécharger le prompt gratuit</a></p>
+          <p>Tu recevras aussi nos prochaines nouveautés et bons plans. Tu peux te désinscrire à tout moment.</p>
+          <p>À très vite,<br/>L'équipe Juriskills</p>
+        </div>
+      `
+        : `
         <div style="font-family: sans-serif; color: #0b0f1a;">
           <h1 style="color: #4d4696;">C'est noté !</h1>
           <p>On te préviendra dès que les premiers produits de cette catégorie seront en ligne sur Juriskills.</p>
@@ -62,5 +82,5 @@ export async function POST(req: Request) {
     console.error("Échec de l'envoi de l'email de confirmation waitlist :", err);
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, freePromptUrl: isNewsletter ? freePromptUrl : undefined });
 }

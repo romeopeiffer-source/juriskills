@@ -4,6 +4,7 @@ import { getFeaturedProducts } from "@/lib/products";
 import { ProductCard } from "@/components/products/ProductCard";
 import { EmptyState } from "@/components/products/EmptyState";
 import { AboutSection } from "@/components/home/AboutSection";
+import { NewsletterSignup } from "@/components/home/NewsletterSignup";
 import { StudentCountBadge } from "@/components/ui/StudentCountBadge";
 import { getStudentCount } from "@/config/social-proof";
 
@@ -86,6 +87,8 @@ export default async function HomePage() {
           </div>
         )}
       </section>
+
+      <NewsletterSignup />
     </div>
   );
 }
