@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { subscribeToNewsletter, resolveSiteUrl } from "@/lib/newsletter";
+import { generateVerificationCode, sendVerificationCodeEmail } from "@/lib/email-verification";
 
 const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
+  const { code, expiresAt } = generateVerificationCode();
 
   await prisma.user.create({
     data: {
@@ -42,8 +44,12 @@ export async function POST(req: Request) {
       passwordHash,
       newsletterOptIn,
       role: "CLIENT",
+      verificationCode: code,
+      verificationCodeExpiresAt: expiresAt,
     },
   });
+
+  await sendVerificationCodeEmail(normalizedEmail, name, code);
 
   if (newsletterOptIn) {
     try {

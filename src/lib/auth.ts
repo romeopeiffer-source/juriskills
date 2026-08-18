@@ -37,7 +37,7 @@ export const authOptions: NextAuthOptions = {
         const valid = await bcrypt.compare(credentials.password, user.passwordHash);
         if (!valid) return null;
 
-        return { id: user.id, email: user.email, name: user.name, role: user.role };
+        return { id: user.id, email: user.email, name: user.name, role: user.role, emailVerified: user.emailVerified };
       },
     }),
     CredentialsProvider({
@@ -69,10 +69,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.role = (user as { role: "CLIENT" | "ADMIN" }).role;
         token.id = user.id;
+        token.emailVerified = (user as { emailVerified?: boolean }).emailVerified ?? true;
+      }
+      if (trigger === "update" && token.id) {
+        const fresh = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { emailVerified: true },
+        });
+        if (fresh) token.emailVerified = fresh.emailVerified;
       }
       return token;
     },
@@ -80,6 +88,7 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.role = token.role as "CLIENT" | "ADMIN";
         session.user.id = token.id as string;
+        session.user.emailVerified = token.emailVerified as boolean;
       }
       return session;
     },

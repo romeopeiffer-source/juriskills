@@ -32,14 +32,17 @@ enum ProductResultType {
 }
 
 model User {
-  id               String     @id @default(cuid())
-  email            String     @unique
-  passwordHash     String
-  name             String
-  newsletterOptIn  Boolean    @default(false)
-  role             Role       @default(CLIENT)
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  id                         String     @id @default(cuid())
+  email                      String     @unique
+  passwordHash               String
+  name                       String
+  newsletterOptIn            Boolean    @default(false)
+  role                       Role       @default(CLIENT)
+  emailVerified              Boolean    @default(false)
+  verificationCode           String?
+  verificationCodeExpiresAt  DateTime?
+  createdAt                  DateTime   @default(now())
+  updatedAt                  DateTime   @updatedAt
 
   purchases        Purchase[]
   reviews          Review[]

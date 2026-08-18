@@ -32,7 +32,7 @@ export default function RegisterPage() {
       const signInRes = await signIn("credentials", { email, password, redirect: false });
       if (signInRes?.error) throw new Error("Compte créé, mais la connexion automatique a échoué.");
 
-      router.push("/");
+      router.push("/compte/verification-email");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue.");
