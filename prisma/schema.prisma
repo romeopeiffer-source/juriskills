@@ -89,15 +89,17 @@ model ProductResult {
 }
 
 model Purchase {
-  id               String         @id @default(cuid())
-  userId           String
-  productId        String
-  pricePaid        Int
-  invoiceUrl       String?
-  stripePaymentId  String?        @unique
-  stripeSessionId  String?        @unique
-  status           PurchaseStatus @default(PENDING)
-  createdAt        DateTime       @default(now())
+  id                  String         @id @default(cuid())
+  userId              String
+  productId           String
+  pricePaid           Int
+  invoiceUrl          String?
+  stripePaymentId     String?        @unique
+  stripeSessionId     String?        @unique
+  status              PurchaseStatus @default(PENDING)
+  withdrawalWaived    Boolean        @default(false)
+  withdrawalWaivedAt  DateTime?
+  createdAt           DateTime       @default(now())
 
   user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   product          Product        @relation(fields: [productId], references: [id], onDelete: Restrict)

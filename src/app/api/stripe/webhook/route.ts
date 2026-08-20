@@ -87,7 +87,12 @@ async function handleCheckoutCompleted(checkoutSession: Stripe.Checkout.Session)
       html: `
         <div style="font-family: sans-serif; color: #0b0f1a;">
           <h1 style="color: #4d4696;">Merci pour votre achat, ${purchase.user.name} !</h1>
-          <p>Vous venez d'acquérir <strong>${purchase.product.name}</strong>.</p>
+          <p>Vous venez d'acquérir <strong>${purchase.product.name}</strong> (${(purchase.pricePaid / 100).toFixed(2)} € TTC), avec accès immédiat au contenu numérique.</p>
+          ${
+            purchase.withdrawalWaived
+              ? `<p style="font-size: 13px; color: #6b7280;">Le ${purchase.withdrawalWaivedAt?.toLocaleString("fr-FR") ?? ""}, vous avez demandé l'exécution immédiate de ce contenu numérique et renoncé expressément à votre droit de rétractation de 14 jours, conformément à l'article L221-28 du Code de la consommation.</p>`
+              : ""
+          }
           <p>Votre facture est jointe à cet email. Vous pouvez également retrouver votre produit et votre facture
           à tout moment dans votre espace personnel :</p>
           <p><a href="${siteUrl}/compte/mes-achats" style="color:#4d4696;">Accéder à mes achats</a></p>

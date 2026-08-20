@@ -18,7 +18,7 @@ export function PriceTag({ size = "sm", ...product }: Props) {
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap items-center gap-2">
         <span className={size === "lg" ? "font-display text-3xl font-bold text-white" : "font-display text-lg font-bold text-white"}>
-          {formatPrice(finalPrice)}
+          {formatPrice(finalPrice)} <span className="text-sm font-normal text-slate-500">TTC</span>
         </span>
         {hasDiscount && (
           <>

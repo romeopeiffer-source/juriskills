@@ -6,7 +6,12 @@ import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import { getEffectivePrice } from "@/lib/pricing";
 
-const checkoutSchema = z.object({ productId: z.string().min(1) });
+const checkoutSchema = z.object({
+  productId: z.string().min(1),
+  withdrawalWaived: z.literal(true, {
+    errorMap: () => ({ message: "Vous devez confirmer la renonciation au droit de rétractation." }),
+  }),
+});
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -17,7 +22,8 @@ export async function POST(req: Request) {
   const body = await req.json();
   const parsed = checkoutSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Produit invalide." }, { status: 400 });
+    const message = parsed.error.issues[0]?.message ?? "Produit invalide.";
+    return NextResponse.json({ error: message }, { status: 400 });
   }
 
   const product = await prisma.product.findUnique({ where: { id: parsed.data.productId } });
@@ -82,6 +88,8 @@ export async function POST(req: Request) {
       pricePaid: finalPrice,
       stripeSessionId: checkoutSession.id,
       status: "PENDING",
+      withdrawalWaived: true,
+      withdrawalWaivedAt: new Date(),
     },
   });
 

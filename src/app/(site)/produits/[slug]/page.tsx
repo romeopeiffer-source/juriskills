@@ -6,6 +6,7 @@ import { PriceTag } from "@/components/products/PriceTag";
 import { BuyButton } from "@/components/products/BuyButton";
 import { ReviewsSection } from "@/components/reviews/ReviewsSection";
 import { CATEGORY_LABELS } from "@/lib/utils";
+import { getEffectivePrice } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function ProductPage({ params }: { params: { slug: string } }) {
   const product = await getProductBySlug(params.slug);
   if (!product) notFound();
+
+  const { finalPrice } = getEffectivePrice(product);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
@@ -45,13 +48,23 @@ export default async function ProductPage({ params }: { params: { slug: string }
           </div>
 
           <div className="mt-6">
-            <BuyButton productId={product.id} productSlug={product.slug} />
+            <BuyButton
+              productId={product.id}
+              productSlug={product.slug}
+              productName={product.name}
+              price={finalPrice}
+            />
           </div>
 
           <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
             <Sparkles className="h-3.5 w-3.5 shrink-0" />
             Compatible avec ChatGPT, Claude, Gemini et tous les assistants IA du marché
           </div>
+          <p className="mt-2 text-xs text-slate-500">
+            Livré au format PDF/DOCX, utilisable directement dans n&apos;importe quel assistant IA
+            conversationnel — aucun logiciel spécifique requis. Mises à jour mineures incluses ;
+            support par email en cas de question sur l&apos;utilisation du produit.
+          </p>
         </div>
       </div>
 

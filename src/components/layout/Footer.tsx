@@ -83,6 +83,11 @@ export function Footer() {
                   CGV
                 </Link>
               </li>
+              <li>
+                <Link href="/cgu" className="hover:text-white">
+                  CGU
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

@@ -29,6 +29,9 @@ export default function AProposPage() {
           rendu, de chercher une jurisprudence introuvable, ou de devoir choisir entre un outil payant et son budget
           du mois. Juriskills existe pour combler cet écart, pas pour vendre un abonnement à prix cabinet.
         </p>
+        <p className="text-sm text-slate-500">
+          Assurance responsabilité civile professionnelle : [À COMPLÉTER : assureur et numéro de police].
+        </p>
       </div>
     </div>
   );
