@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { CreditCard, Loader2 } from "lucide-react";
+import { CheckCircle2, CreditCard, Download, Gift, Loader2 } from "lucide-react";
 import { formatPrice } from "@/lib/pricing";
 
 export function BuyButton({
@@ -11,11 +11,13 @@ export function BuyButton({
   productSlug,
   productName,
   price,
+  isFree = false,
 }: {
   productId: string;
   productSlug: string;
   productName: string;
   price: number;
+  isFree?: boolean;
 }) {
   const { status } = useSession();
   const router = useRouter();
@@ -23,12 +25,34 @@ export function BuyButton({
   const [withdrawalWaived, setWithdrawalWaived] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [claimed, setClaimed] = useState(false);
 
-  function handleShowRecap() {
+  function requireAuth() {
     if (status !== "authenticated") {
       router.push(`/compte/connexion?callbackUrl=/produits/${productSlug}`);
-      return;
+      return false;
     }
+    return true;
+  }
+
+  async function handleClaimFree() {
+    if (!requireAuth()) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/products/${productId}/claim`, { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Une erreur est survenue.");
+      setClaimed(true);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Une erreur est survenue.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleShowRecap() {
+    if (!requireAuth()) return;
     setShowRecap(true);
   }
 
@@ -48,6 +72,32 @@ export function BuyButton({
       setError(e instanceof Error ? e.message : "Une erreur est survenue.");
       setLoading(false);
     }
+  }
+
+  if (isFree) {
+    if (claimed) {
+      return (
+        <div className="flex flex-col gap-2">
+          <p className="flex items-center gap-2 text-sm text-emerald-400">
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            Ajouté à vos achats !
+          </p>
+          <a href="/compte/mes-achats" className="btn-primary w-full sm:w-auto">
+            <Download className="h-4 w-4" />
+            Voir mes achats
+          </a>
+        </div>
+      );
+    }
+    return (
+      <div>
+        <button onClick={handleClaimFree} disabled={loading} className="btn-primary w-full sm:w-auto !bg-red-500 hover:!bg-red-600">
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Gift className="h-4 w-4" />}
+          Obtenir gratuitement
+        </button>
+        {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+      </div>
+    );
   }
 
   if (!showRecap) {

@@ -5,7 +5,7 @@ import { getProductBySlug } from "@/lib/products";
 import { PriceTag } from "@/components/products/PriceTag";
 import { BuyButton } from "@/components/products/BuyButton";
 import { ReviewsSection } from "@/components/reviews/ReviewsSection";
-import { CATEGORY_LABELS } from "@/lib/utils";
+import { CATEGORY_LABELS, cn } from "@/lib/utils";
 import { getEffectivePrice } from "@/lib/pricing";
 
 export const dynamic = "force-dynamic";
@@ -25,26 +25,42 @@ export default async function ProductPage({ params }: { params: { slug: string }
   return (
     <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
-        <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 bg-night-800">
-          {product.imageUrl ? (
-            <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-night-800 to-night-700">
-              <FileText className="h-14 w-14 text-slate-600" />
+        <div>
+          {product.isFree && (
+            <div className="rounded-t-2xl bg-red-500 py-1.5 text-center text-sm font-bold uppercase tracking-wider text-white">
+              Gratuit
             </div>
           )}
+          <div
+            className={cn(
+              "relative aspect-[16/10] overflow-hidden border border-white/10 bg-night-800",
+              product.isFree ? "rounded-b-2xl border-2 border-t-0 border-red-500" : "rounded-2xl"
+            )}
+          >
+            {product.imageUrl ? (
+              <Image src={product.imageUrl} alt={product.name} fill className="object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-night-800 to-night-700">
+                <FileText className="h-14 w-14 text-slate-600" />
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col">
           <div className="mt-2">
-            <PriceTag
-              size="lg"
-              price={product.price}
-              discountPercent={product.discountPercent}
-              discountAmount={product.discountAmount}
-              discountStart={product.discountStart}
-              discountEnd={product.discountEnd}
-            />
+            {product.isFree ? (
+              <span className="font-display text-3xl font-bold text-red-500">Gratuit</span>
+            ) : (
+              <PriceTag
+                size="lg"
+                price={product.price}
+                discountPercent={product.discountPercent}
+                discountAmount={product.discountAmount}
+                discountStart={product.discountStart}
+                discountEnd={product.discountEnd}
+              />
+            )}
           </div>
 
           <div className="mt-6">
@@ -53,6 +69,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
               productSlug={product.slug}
               productName={product.name}
               price={finalPrice}
+              isFree={product.isFree}
             />
           </div>
 

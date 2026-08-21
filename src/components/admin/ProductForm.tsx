@@ -14,6 +14,7 @@ export function ProductForm({ product }: { product?: Product }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isFree, setIsFree] = useState(product?.isFree ?? false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -22,6 +23,8 @@ export function ProductForm({ product }: { product?: Product }) {
 
     const formData = new FormData(e.currentTarget);
     formData.set("isPublished", formData.get("isPublished") ? "true" : "false");
+    formData.set("isFree", isFree ? "true" : "false");
+    if (isFree) formData.set("price", "0");
 
     try {
       const res = await fetch(product ? `/api/admin/products/${product.id}` : "/api/admin/products", {
@@ -79,10 +82,13 @@ export function ProductForm({ product }: { product?: Product }) {
             name="price"
             defaultValue={product?.price}
             min={0}
-            required
-            className="input-field"
+            required={!isFree}
+            disabled={isFree}
+            className="input-field disabled:opacity-50"
           />
-          <p className="mt-1 text-xs text-slate-500">Ex : 4900 pour 49,00 €</p>
+          <p className="mt-1 text-xs text-slate-500">
+            {isFree ? "Ignoré tant que « Produit gratuit » est coché." : "Ex : 4900 pour 49,00 €"}
+          </p>
         </div>
         <div className="flex items-center gap-3 pt-7">
           <input
@@ -96,6 +102,20 @@ export function ProductForm({ product }: { product?: Product }) {
             Produit publié (visible sur le site)
           </label>
         </div>
+      </div>
+
+      <div className="flex items-center gap-3 rounded-xl border border-red-500/30 bg-red-500/5 p-4">
+        <input
+          type="checkbox"
+          id="isFree"
+          checked={isFree}
+          onChange={(e) => setIsFree(e.target.checked)}
+          className="h-4 w-4 accent-red-500"
+        />
+        <label htmlFor="isFree" className="text-sm text-slate-300">
+          Produit gratuit — affiché avec un contour rouge et le badge « GRATUIT » côté client, sans passer
+          par Stripe.
+        </label>
       </div>
 
       <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">

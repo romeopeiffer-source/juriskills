@@ -57,6 +57,7 @@ model Product {
   imageUrl         String?
   videoUrl         String?
   price            Int
+  isFree           Boolean          @default(false)
   fileUrl          String?
   discountPercent  Int?
   discountAmount   Int?

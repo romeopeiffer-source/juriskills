@@ -3,10 +3,22 @@ import Image from "next/image";
 import { FileText, Star } from "lucide-react";
 import { PriceTag } from "@/components/products/PriceTag";
 import type { ProductWithRating } from "@/types/product";
+import { cn } from "@/lib/utils";
 
 export function ProductCard({ product }: { product: ProductWithRating }) {
   return (
-    <Link href={`/produits/${product.slug}`} className="glass-card group flex flex-col overflow-hidden">
+    <Link
+      href={`/produits/${product.slug}`}
+      className={cn(
+        "glass-card group flex flex-col overflow-hidden",
+        product.isFree && "border-2 border-red-500"
+      )}
+    >
+      {product.isFree && (
+        <div className="bg-red-500 py-1 text-center text-xs font-bold uppercase tracking-wider text-white">
+          Gratuit
+        </div>
+      )}
       <div className="relative aspect-[16/10] w-full overflow-hidden bg-night-800">
         {product.imageUrl ? (
           <Image
@@ -36,13 +48,17 @@ export function ProductCard({ product }: { product: ProductWithRating }) {
         )}
 
         <div className="mt-2">
-          <PriceTag
-            price={product.price}
-            discountPercent={product.discountPercent}
-            discountAmount={product.discountAmount}
-            discountStart={product.discountStart}
-            discountEnd={product.discountEnd}
-          />
+          {product.isFree ? (
+            <span className="font-display text-lg font-bold text-red-500">Gratuit</span>
+          ) : (
+            <PriceTag
+              price={product.price}
+              discountPercent={product.discountPercent}
+              discountAmount={product.discountAmount}
+              discountStart={product.discountStart}
+              discountEnd={product.discountEnd}
+            />
+          )}
         </div>
       </div>
     </Link>
